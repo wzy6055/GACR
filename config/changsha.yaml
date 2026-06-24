@@ -1,0 +1,70 @@
+logging:
+  output_dir: "exps"
+  exp_name: "changsha_gacr_dinov3_offline"
+  logging_dir: "logs"
+  report_to: null
+  sampling_steps: 1000
+  resume_step: 0
+
+model:
+  in_channels: 6
+  out_channels: 3
+  patch_size: [2, 2]
+  widths: [128, 256, 512, 1024]
+  depths: [2, 2, 2, 2]
+  d_ffs: [256, 512, 1024, 2048]
+  self_attns:
+    - {type: "neighborhood", d_head: 64, kernel_size: 7}
+    - {type: "neighborhood", d_head: 64, kernel_size: 7}
+    - {type: "global", d_head: 64}
+    - {type: "global", d_head: 64}
+  dropout_rate: [0.0, 0.0, 0.0, 0.1]
+  mapping_depth: 2
+  mapping_width: 1024
+  mapping_d_ff: 2048
+  mapping_dropout_rate: 0.1
+
+gcpa:
+  vfm: "dinov3"
+  offline: true
+  feat_path: "path/to/dataset_dino_v3/changsha/dinov3_lvd.npy"
+  model_path: "path/to/vfm_weights/dinov3/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth"
+  source: "local"
+  repo_path: "path/to/dinov3_repo"
+  model_name: "dinov3_vitl16"
+
+dataset:
+  data_dir: "path/to/DATASET/DACR/CR/changsha256/"
+  resolution: 256
+  batch_size: 4
+  val_size: 100
+
+precision:
+  allow_tf32: false
+  mixed_precision: "fp16"
+
+optimization:
+  epochs: 1400
+  max_train_steps: 200000
+  checkpointing_steps: 10000
+  gradient_accumulation_steps: 1
+  learning_rate: 1.0e-4
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_weight_decay: 0.0
+  adam_epsilon: 1.0e-08
+  max_grad_norm: 1.0
+
+misc:
+  seed: 0
+  num_workers: 4
+
+loss:
+  path_type: "linear"
+  prediction: "v"
+  cfg_prob: 0.1
+  enc_type: "dinov3-vit-l"
+  proj_coeff: 0.5
+  weighting: "uniform"
+  p: 3.0
+  legacy: false
