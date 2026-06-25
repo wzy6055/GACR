@@ -52,10 +52,10 @@ Potsdam-CR and Vaihingen-CR are synthetic cloud-removal datasets built from the 
 
 Our implementation has been tested with the following visual foundation models:
 
-- DINOv3 (ViT-L) ([url](https://github.com/facebookresearch/dinov3))
-- DINOv2 (ViT-L) ([url](https://github.com/facebookresearch/dinov2))
-- CLIP (ViT-L) ([url](https://github.com/openai/CLIP))
-- MAE (ViT-L) ([url](https://github.com/facebookresearch/mae))
+- [DINOv3](https://github.com/facebookresearch/dinov3) (ViT-L)
+- [DINOv2](https://github.com/facebookresearch/dinov2) (ViT-L)
+- [CLIP](https://github.com/openai/CLIP) (ViT-L)
+- [MAE](https://github.com/facebookresearch/mae) (ViT-L)
 
 Place the model weights under `vfm_weights/`, or update the corresponding paths in your config file.
 
@@ -152,6 +152,13 @@ python test.py \
   --num-steps 4 \
   --save-pred
 ```
+
+## Contact
+
+If you have any questions, or encounter any issues while running the code, feel free to contact us:
+
+- **Email**: [ziyaowang2@link.cuhk.edu.cn](mailto:ziyaowang2@link.cuhk.edu.cn)
+- **Our Lab Website**: https://mypage.cuhk.edu.cn/academics/simonpun/
 
 ## Acknowledgment
 
