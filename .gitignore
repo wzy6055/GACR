@@ -36,3 +36,6 @@ dst/
 *.tif
 *.tiff
 config/local_test_*.yml
+
+!assets/
+!assets/framework.png
