@@ -18,13 +18,6 @@ This repository provides the training and testing code for GACR, an interpretati
 - **OAR-Flow**: Observation-Anchored Residual Flow for cloud-removal flow matching.
 - **GCPA**: Geo-Contextual Prior Alignment using visual foundation model features.
 
-The release supports GCPA in two modes:
-
-- **Offline GCPA**: precompute VFM patch features and load them from `gcpa.feat_path`.
-- **Online GCPA**: instantiate the VFM during training and infer features at runtime.
-
-Supported VFM choices are `dinov3`, `dinov2`, `mae`, and `clip`. The main paper path uses DINOv3.
-
 ## Install
 
 We provide a tested environment list in `requirements.txt`. To set up this environment, first create and activate a conda environment:
