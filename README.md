@@ -173,12 +173,11 @@ This codebase is built upon several excellent open-source projects. We sincerely
 
 If you find our work useful, please consider citing our paper. (The page numbers will be added once available.)
 
-```
+```bibtex
 @inproceedings{wang2026gacr,
   title={Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment},
   author={Wang, Ziyao and Wang, Maonan and He, Yucheng and Ma, Xianping and Wang, Ziyi and Zhang, Hongyang and Cheng, Yirong and Pun, Man-On},
   booktitle={European Conference on Computer Vision},
-  pages={},
   year={2026},
   publisher={Springer},
 }
