@@ -2,9 +2,14 @@
 
 Official implementation of **"Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment"**, accepted by **ECCV 2026**.
 
-## Abstract
+Paper (coming soon) | [Code](https://github.com/wzy6055/GACR)
 
-> [Paste the paper abstract here.]
+![framework](assets/framework.png)
+
+## Updates
+
+- June 2026: Source code has been released!
+- June 2026: GACR was accepted into ECCV 2026. Congratulations! 🥳
 
 ## Overview
 
@@ -12,72 +17,53 @@ This repository provides the training and testing code for GACR, an interpretati
 
 - **OAR-Flow**: Observation-Anchored Residual Flow for cloud-removal flow matching.
 - **GCPA**: Geo-Contextual Prior Alignment using visual foundation model features.
-- **Hourglass Transformer**: the cloud-removal backbone implemented in `models/k_diffusion/image_transformer.py`.
 
 The release supports GCPA in two modes:
 
 - **Offline GCPA**: precompute VFM patch features and load them from `gcpa.feat_path`.
-- **Online GCPA**: instantiate the VFM during training and infer features on the fly.
+- **Online GCPA**: instantiate the VFM during training and infer features at runtime.
 
 Supported VFM choices are `dinov3`, `dinov2`, `mae`, and `clip`. The main paper path uses DINOv3.
 
-## Environment
+## Install
+
+We provide a tested environment list in `requirements.txt`. To set up this environment, first create and activate a conda environment:
 
 ```bash
 conda create -n gacr python=3.10 -y
 conda activate gacr
+```
+
+Then install the required packages:
+
+```bash
 pip install -r requirements.txt
 ```
 
-The provided environment was tested with PyTorch 2.4.0 and CUDA 12.4. `natten` and `flash-attn` are CUDA/PyTorch sensitive; install wheels matching your local PyTorch and CUDA version if the pinned versions are not compatible with your machine.
+Please note that `flash-attn` and `natten` are sensitive to CUDA and PyTorch versions. If you encounter dependency conflicts during installation, we recommend referring to the setup instructions of [EMRDM](https://github.com/Ly403/EMRDM) and installing these two packages from compatible wheel files.
 
-## Repository Structure
+If you run into other installation issues, please feel free to open an issue.
 
-```text
-GACR/
-  train.py                    # training entry
-  test.py                     # evaluation and prediction export
-  cache_feat.py               # offline DINOv3 feature cache script
-  dataset.py                  # cloud-removal dataset loaders
-  engine.py                   # OAR-Flow objective, sampler, metrics
-  requirements.txt
-  config/
-  models/
-    k_diffusion/              # hourglass Transformer backbone
-    sgm/                      # sampler, denoiser, metrics utilities
-  vfm_weights/                # VFM weights, e.g. DINOv3 .pth files
-```
+## Run
 
-## Dataset Layout
+### Dataset
 
-For Changsha/Guangzhou-style datasets:
+We are still preparing the datasets for release. The download links and detailed dataset instructions will be provided as soon as they are ready.
 
-```text
-DATA_ROOT/
-  train.txt
-  test.txt
-  clear/
-  cloudy/
-```
+### Prepare VFM Weights
 
-For ISPRS Potsdam/Vaihingen-style datasets:
+Our implementation has been tested with the following visual foundation models:
 
-```text
-DATA_ROOT/
-  train.txt
-  test.txt
-  clear/
-  thin/
-  thick/
-```
+- DINOv3 (ViT-L) ([url](https://github.com/facebookresearch/dinov3))
+- DINOv2 (ViT-L) ([url](https://github.com/facebookresearch/dinov2))
+- CLIP (ViT-L) ([url](https://github.com/openai/CLIP))
+- MAE (ViT-L) ([url](https://github.com/facebookresearch/mae))
 
-Images are loaded as RGB and normalized to `[-1, 1]` by `dataset.py`.
+Place the model weights under `vfm_weights/`, or update the corresponding paths in your config file.
 
-## VFM Weights
+In our implementation, DINOv3 uses `.pth` weights, while DINOv2, MAE, and CLIP are loaded from Hugging Face-style safetensors.
 
-Place visual foundation model weights under `vfm_weights/` or update the paths in your config.
-
-Example DINOv3 layout:
+An example DINOv3 weight layout is:
 
 ```text
 vfm_weights/
@@ -85,7 +71,7 @@ vfm_weights/
     dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth
 ```
 
-For DINOv2, MAE, and CLIP online GCPA, use Hugging Face model directories, for example:
+For DINOv2, MAE, and CLIP, use Hugging Face model directories, for example:
 
 ```text
 vfm_weights/
@@ -94,21 +80,13 @@ vfm_weights/
   clip-vit-large-patch14/
 ```
 
-## Offline DINOv3 Feature Cache
+### Train
 
-Offline GCPA expects a NumPy `.npy` dictionary:
+The released code supports both offline GCPA and online GCPA.
 
-```python
-{
-  "image_name.png": np.ndarray,  # shape [num_patch_tokens, feature_dim]
-}
-```
-
-Generate DINOv3 features with:
+(1) For offline GCPA, which has currently been tested with DINOv3, first cache the features as a `.npy` file:
 
 ```bash
-cd /path/to/GACR
-
 python cache_feat.py \
   --data-path /path/to/DATA_ROOT/clear \
   --output-path ./dataset_dino_v3/YOUR_DATASET/dinov3_lvd.npy \
@@ -117,20 +95,16 @@ python cache_feat.py \
   --weight-path ./vfm_weights/dinov3/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth
 ```
 
-`cache_feat.py` determines DINOv3 normalization from the weight path: if `sat` appears in `--weight-path`, SAT normalization is used; otherwise LVD/ImageNet normalization is used.
-
-## Configuration
-
-GCPA settings live under `gcpa`:
+Then set the dataset path and cached feature path in the config file:
 
 ```yaml
 gcpa:
-  vfm: "dinov3"        # dinov3, dinov2, mae, clip
-  offline: true        # true: load cached features; false: online VFM inference
+  vfm: "dinov3"
+  offline: true
   feat_path: "./dataset_dino_v3/YOUR_DATASET/dinov3_lvd.npy"
 ```
 
-For online DINOv3:
+(2) For online GCPA, set `offline` to `false` and configure the VFM weight path in the config file. For example, online DINOv3 can be configured as:
 
 ```yaml
 gcpa:
@@ -142,106 +116,70 @@ gcpa:
   model_name: "dinov3_vitl16"
 ```
 
-For online Hugging Face VFMs:
+For Hugging Face-style VFMs such as DINOv2, MAE, and CLIP, use:
 
 ```yaml
 gcpa:
-  vfm: "clip"          # or dinov2 / mae
+  vfm: "clip"  # or "dinov2" / "mae"
   offline: false
   model_path: "./vfm_weights/clip-vit-large-patch14"
   local_files_only: true
 ```
 
-## Training
-
-Run training with Accelerate:
+(3) Then launch training with:
 
 ```bash
-cd /path/to/GACR
-
-accelerate launch train.py \
-  --config config/YOUR_CONFIG.yml
+accelerate launch train.py --config config/changsha.yaml
 ```
 
-Smoke-test configs are provided for quick checks:
-
-```bash
-accelerate launch train.py --config config/test_10step_dinov3_offline.yml
-accelerate launch train.py --config config/test_10step_dinov3_online.yml
-accelerate launch train.py --config config/test_10step_clip_online.yml
-accelerate launch train.py --config config/test_10step_dinov2_online.yml
-accelerate launch train.py --config config/test_10step_mae_online.yml
-```
-
-Training writes checkpoints to:
+The training outputs will be saved to `exps/<exp_name>/`:
 
 ```text
-exps/<exp_name>/checkpoints/
+exps/<exp_name>/
 ```
 
-Validation metrics are appended locally, one row per validation step:
+### Test
 
-```text
-exps/<exp_name>/validation_metrics.csv
-```
-
-## Testing and Prediction Export
-
-Evaluate a checkpoint and export predictions:
+You can evaluate a trained checkpoint with:
 
 ```bash
-cd /path/to/GACR
-
 python test.py \
-  --config config/YOUR_CONFIG.yml \
-  --ckpt exps/YOUR_EXP/checkpoints/0200000.pt \
-  --state-key ema \
+  --config config/changsha.yaml \
+  --ckpt exps/<exp_name>/checkpoints/0200000.pt \
+  --num-steps 4
+```
+
+To explicitly save the predicted cloud-free images, run:
+
+```bash
+python test.py \
+  --config config/changsha.yaml \
+  --ckpt exps/<exp_name>/checkpoints/0200000.pt \
   --num-steps 4 \
   --save-pred
 ```
 
-For a quick subset:
+## Acknowledgment
 
-```bash
-python test.py \
-  --config config/YOUR_CONFIG.yml \
-  --ckpt exps/YOUR_EXP/checkpoints/0200000.pt \
-  --max-samples 5 \
-  --save-pred
-```
+This codebase is built upon several excellent open-source projects. We sincerely thank the authors and maintainers for their contributions to the community:
 
-Outputs are saved to:
-
-```text
-exps/<exp_name>/test/
-  preds/
-  <ckpt>_metrics.json
-  <ckpt>_metrics.csv
-```
-
-You can also set a custom output directory:
-
-```bash
-python test.py \
-  --config config/YOUR_CONFIG.yml \
-  --ckpt /absolute/path/to/checkpoint.pt \
-  --output-dir ./test_outputs/YOUR_RUN \
-  --save-pred
-```
+- [EMRDM](https://github.com/Ly403/EMRDM)
+- [k-diffusion](https://github.com/crowsonkb/k-diffusion)
+- [REPA](https://github.com/sihyun-yu/REPA)
+- [SiT](https://github.com/willisma/sit)
+- [DFCFormer](https://github.com/wzy6055/DFCFormer)
 
 ## Citation
 
-If you find this project useful, please cite our paper:
+If you find our work useful, please consider citing our paper. (The page numbers will be added once available.)
 
-```bibtex
-@inproceedings{gacr2026,
-  title     = {Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment},
-  author    = {TBD},
-  booktitle = {European Conference on Computer Vision (ECCV)},
-  year      = {2026}
+```
+@inproceedings{wang2026gacr,
+  title={Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment},
+  author={Wang, Ziyao and Wang, Maonan and He, Yucheng and Ma, Xianping and Wang, Ziyi and Zhang, Hongyang and Cheng, Yirong and Pun, Man-On},
+  booktitle={European Conference on Computer Vision},
+  pages={},
+  year={2026},
+  publisher={Springer},
 }
 ```
-
-## Acknowledgements
-
-This codebase uses PyTorch, Hugging Face Transformers/Diffusers, DINOv3, NATTEN, FlashAttention, and LPIPS. We thank the authors and maintainers of these projects.
