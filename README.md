@@ -134,10 +134,6 @@ accelerate launch train.py --config config/changsha.yaml
 
 The training outputs will be saved to `exps/<exp_name>/`:
 
-```text
-exps/<exp_name>/
-```
-
 ### Test
 
 You can evaluate a trained checkpoint with:
