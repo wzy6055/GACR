@@ -2,12 +2,13 @@
 
 Official implementation of **"Interpretation-Oriented Cloud Removal via Observation-Anchored Residual Flow with Geo-Contextual Alignment"**, accepted by **ECCV 2026**.
 
-Paper (coming soon) | [Code](https://github.com/wzy6055/GACR)
+[ArXiv](https://arxiv.org/abs/2607.02471) | Paper (coming soon) | [Code](https://github.com/wzy6055/GACR)
 
 ![framework](assets/framework.png)
 
 ## Updates
 
+- July 2026: The preprint version has been released in arXiv. 
 - June 2026: Source code has been released!
 - June 2026: GACR was accepted into ECCV 2026. Congratulations! 🥳
 
@@ -172,7 +173,7 @@ This codebase is built upon several excellent open-source projects. We sincerely
 
 ## Citation
 
-If you find our work useful, please consider citing our paper. (The page numbers will be added once available.)
+If you find our work useful, please consider citing our paper.
 
 ```bibtex
 @inproceedings{wang2026gacr,
