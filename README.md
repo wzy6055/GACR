@@ -8,6 +8,7 @@ Official implementation of **"Interpretation-Oriented Cloud Removal via Observat
 
 ## Updates
 
+- July 2026: We have released our datasets on Hugging Face. 🤗 
 - July 2026: The preprint version has been released in arXiv. 
 - June 2026: Source code has been released!
 - June 2026: GACR was accepted into ECCV 2026. Congratulations! 🥳
