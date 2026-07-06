@@ -42,12 +42,12 @@ If you run into other installation issues, please feel free to open an issue.
 
 ### Dataset
 
-CUHKCR-EXT is further developed from the dataset introduced in [DFCFormer](https://github.com/wzy6055/DFCFormer). Compared with the original dataset, We additionally provided building extraction labels. The CR, CLS, and BLD tasks in this work are based on the newly released version. The dataset can be downloaded from [Baidu Netdisk](https://pan.baidu.com/s/1Qzg855PVPbflMUqQL6YDTQ?pwd=gacr) with access code `gacr`.
+CUHKCR-EXT is further developed from the dataset introduced in [DFCFormer](https://github.com/wzy6055/DFCFormer). Compared with the original dataset, we additionally provide building extraction labels. The CR, CLS, and BLD tasks in this work are based on the newly released version. The dataset is available on [Hugging Face](https://huggingface.co/datasets/wzy6055/cuhkcr-ext) and can also be downloaded from [Baidu Netdisk](https://pan.baidu.com/s/1Qzg855PVPbflMUqQL6YDTQ?pwd=gacr)(code:`gace`).
 
-Potsdam-CR and Vaihingen-CR are synthetic cloud-removal datasets built from the [ISPRS Potsdam](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/2d-sem-label-potsdam.aspx) and [ISPRS Vaihingen](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/2d-sem-label-vaihingen.aspx) datasets using [Satellite Cloud Generator](https://github.com/strath-ai/SatelliteCloudGenerator). The data and splits used for the CR SEG, and HE tasks in this work are available from the following links:
+Potsdam-CR and Vaihingen-CR are synthetic cloud-removal datasets built from the [ISPRS Potsdam](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/2d-sem-label-potsdam.aspx) and [ISPRS Vaihingen](https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/2d-sem-label-vaihingen.aspx) datasets using [Satellite Cloud Generator](https://github.com/strath-ai/SatelliteCloudGenerator). The data and splits used for the CR, SEG, and HE tasks in this work are available from the following links:
 
-- Potsdam-CR: [Baidu Netdisk](https://pan.baidu.com/s/1g1d8eXaN0thRdi9ZX1DoSQ?pwd=gacr), access code `gacr`
-- Vaihingen-CR: [Baidu Netdisk](https://pan.baidu.com/s/1hd5EqA_vhBBhTagY0SNMnw?pwd=gacr), access code `gacr`
+- Potsdam-CR: [Hugging Face](https://huggingface.co/datasets/wzy6055/potsdam-cr), [Baidu Netdisk](https://pan.baidu.com/s/1g1d8eXaN0thRdi9ZX1DoSQ?pwd=gacr)(code:`gace`).
+- Vaihingen-CR: [Hugging Face](https://huggingface.co/datasets/wzy6055/vaihingen-cr), [Baidu Netdisk](https://pan.baidu.com/s/1hd5EqA_vhBBhTagY0SNMnw?pwd=gacr)(code:`gace`).
 
 ### Prepare VFM Weights
 
